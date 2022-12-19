@@ -1,0 +1,34 @@
+class Solution {
+    private int mergeSortAndCount(int[] nums, int[] temp, int left, int right) {
+        if (left >= right) return 0;
+
+        int mid = left + (right - left) / 2;
+        int count = mergeSortAndCount(nums, temp, left, mid) + mergeSortAndCount(nums, temp, mid + 1, right);
+
+        for (int i = left, j = mid + 1; i <= mid; i++) {
+            while (j <= right && nums[i] > 2 * (long) nums[j]) j++;
+            count += j - (mid + 1);
+        }
+
+        merge(nums, temp, left, mid, right);
+
+        return count;
+    }
+
+    private void merge(int[] nums, int[] temp, int left, int mid, int right) {
+        for (int i = left; i <= right; i++) temp[i] = nums[i];
+
+        int i = left, j = mid + 1, k = left;
+        while (i <= mid && j <= right) {
+            if (temp[i] <= temp[j]) nums[k++] = temp[i++];
+            else nums[k++] = temp[j++];
+        }
+
+        while (i <= mid) nums[k++] = temp[i++];
+    }
+
+    public int reversePairs(int[] nums) {
+        int[] temp = new int[nums.length];
+        return mergeSortAndCount(nums, temp, 0, nums.length - 1);
+    }
+}
