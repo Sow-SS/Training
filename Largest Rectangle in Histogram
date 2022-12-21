@@ -1,0 +1,46 @@
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Solution {
+    public static int largestRectangleArea(int[] heights) {
+        if (heights == null || heights.length == 0) {
+            return 0;
+        }
+
+        Stack<Integer> stack = new Stack<>();
+        int maxArea = 0;
+        int i = 0;
+
+        while (i < heights.length) {
+            if (stack.isEmpty() || heights[i] >= heights[stack.peek()]) {
+                stack.push(i);
+                i++;
+            } else {
+                int h = heights[stack.pop()];
+                int w = stack.isEmpty() ? i : i - stack.peek() - 1;
+                maxArea = Math.max(maxArea, h * w);
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            int h = heights[stack.pop()];
+            int w = stack.isEmpty() ? i : i - stack.peek() - 1;
+            maxArea = Math.max(maxArea, h * w);
+        }
+
+        return maxArea;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] heights = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            System.out.print(i + 1);
+            heights[i] = sc.nextInt();
+        }
+
+        System.out.println(largestRectangleArea(heights));
+    }
+}
